@@ -1,5 +1,6 @@
 const taskContainer= document.querySelector(".task__container");
 
+
 const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md-6 col-lg-4" id=${id}>
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2">
@@ -9,11 +10,11 @@ const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md
   <div class="card-body container">
     <img src=${imageUrl}>
     <h5 class="card-title ">${taskTitle}</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <p class="card-text">${taskDes}</p>
     <span class="badge bg-primary">${taskType}</span>
   </div>
   <div class="card-footer text-muted d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary">${taskDes}</button>
+    <button type="button" class="btn btn-outline-primary">Open Task</button>
   </div>
 </div>
 </div>`;
