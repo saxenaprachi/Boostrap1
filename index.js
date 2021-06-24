@@ -18,7 +18,7 @@ const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md
     <span class="badge bg-primary editable" >${taskType}</span>
   </div>
   <div class="card-footer text-muted d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary">Open Task</button>
+    <button type="button" class="btn btn-outline-primary" id=${id} onClick ="openTask.apply(this, arguments)">Open Task</button>
   </div>
 </div>
 </div>`;
@@ -41,6 +41,7 @@ const loadInitialCardData =() =>{
   });
 };
 
+
 const saveChanges = () =>{
     const taskdata={
         id: `${Date.now()}`, //unique id genration
@@ -55,7 +56,7 @@ const saveChanges = () =>{
 
 taskContainer.insertAdjacentHTML("beforeend",createNewCard);
 GlobalStore.push(taskdata);
-updateLocalStorage()
+updateLocalStorage();
 
 
 };
@@ -92,7 +93,7 @@ const deleteCard =(event) =>{
   );*/
 
 
-}
+};
 
 
 
@@ -101,8 +102,6 @@ const deleteCard =(event) =>{
 const editCard =(event) =>{
 
   event = window.event;
-  const targetId = event.target.id;
-  const targetname = event.target.tagName;
 
   //make fields editable
 
@@ -119,8 +118,60 @@ const editCard =(event) =>{
 
   saveButton = parent.querySelector(".card-footer").querySelector("button");
   saveButton.setAttribute("onClick","esaveChanges.apply(this, arguments)");
-  saveButton.innterHTML="save Changes";
+  saveButton.textContent="save Changes";
   console.log(saveButton);
-}
+};
 
-//https://github.com/pavankpdev/DomManipulationB1
+
+//save changes after editting
+
+const esaveChanges=(event) =>{
+  event = window.event;
+  const targetId = event.target.id;
+  const targetname = event.target.tagName;
+
+  //make fields non editable
+  const parent= event.target.parentNode.parentNode;
+  console.log(parent);
+  const cardBody=parent.querySelector('#cardBody');
+  
+  var fields=cardBody.querySelectorAll(".editable");
+  console.log(fields);
+
+  for(let i= 0; i<fields.length; i++){
+    fields[i].setAttribute("contenteditable","false");
+  }
+
+  //save changes
+
+  ctaskTitle = cardBody.querySelector(".card-title").textContent;
+  ctaskDes = cardBody.querySelector(".card-text").textContent;
+  ctaskType = cardBody.querySelector(".badge").textContent;
+  console.log(ctaskTitle, ctaskType, ctaskDes);
+
+
+  GlobalStore.forEach((card)=>{
+  if(card.id == targetId){
+    console.log("got in the if block.")
+    card.taskTitle =ctaskTitle;
+    card.taskType =ctaskType;
+    card.taskDes = ctaskDes;
+    console.log(card);
+  };
+  })
+
+  console.log(GlobalStore);
+  updateLocalStorage();
+
+  //change button back to Open Task
+  openButton = parent.querySelector(".card-footer").querySelector("button");
+  openButton.setAttribute("onClick","openTask.apply(this, arguments)");
+  openButton.textContent="Open task";
+};
+
+
+const openTask =() =>{
+
+};
+
+/*https://github.com/pavankpdev/DomManipulationB1*/
