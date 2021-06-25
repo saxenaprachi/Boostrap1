@@ -1,4 +1,5 @@
 const taskContainer= document.querySelector(".task__container");
+const modalContainer = document.querySelector(".openModalBody");
 
 //global store
 let GlobalStore = [];
@@ -18,9 +19,23 @@ const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md
     <span class="badge bg-primary editable" >${taskType}</span>
   </div>
   <div class="card-footer text-muted d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary" id=${id} onClick ="openTask.apply(this, arguments)">Open Task</button>
+    <button type="button" class="btn btn-outline-primary" id=${id} onclick="opentask.apply(this, arguments)" data-bs-toggle="modal" data-bs-target="#openModal" >
+    Open Task</button>
   </div>
 </div>
+</div>`;
+
+const openTaskBody=({ imgUrl, taskTitle, taskType,taskDes}) =>`<div class="mb-3 img__Container">
+<img src="${imgUrl}" alt="picture"/>
+</div>
+<div class="mb-3 title__Container">
+<h1>${taskTitle}</h1>
+</div>
+<div class="mb-3 title__Des">
+<p> ${taskDes} </p>
+</div>
+<div class="mb-3 badge__Container">
+<span class="badge bg-primary">${taskType}</span>
 </div>`;
 
 
@@ -75,12 +90,12 @@ const deleteCard =(event) =>{
     (card) => card.id !== targetId
   );
   updateLocalStorage();
-  window.location.reload(true);
+ // window.location.reload(true);
 
 
   // access DOM to remove them
 
- /* if (tagname === "BUTTON") {
+  if (tagname === "BUTTON") {
     // task__container
     return taskContainer.removeChild(
       event.target.parentNode.parentNode.parentNode // col-lg-4
@@ -90,7 +105,7 @@ const deleteCard =(event) =>{
   // task__container
   return taskContainer.removeChild(
     event.target.parentNode.parentNode.parentNode.parentNode // col-lg-4
-  );*/
+  );
 
 
 };
@@ -118,6 +133,9 @@ const editCard =(event) =>{
 
   saveButton = parent.querySelector(".card-footer").querySelector("button");
   saveButton.setAttribute("onClick","esaveChanges.apply(this, arguments)");
+  saveButton.setAttribute("data-bs-toggle", "");
+  saveButton.setAttribute("data-bs-target","");
+
   saveButton.textContent="save Changes";
   console.log(saveButton);
 };
@@ -140,7 +158,7 @@ const esaveChanges=(event) =>{
 
   for(let i= 0; i<fields.length; i++){
     fields[i].setAttribute("contenteditable","false");
-  }
+  };
 
   //save changes
 
@@ -165,12 +183,31 @@ const esaveChanges=(event) =>{
 
   //change button back to Open Task
   openButton = parent.querySelector(".card-footer").querySelector("button");
-  openButton.setAttribute("onClick","openTask.apply(this, arguments)");
+  openButton.setAttribute("onClick","opentask.apply(this, arguments)");
+  saveButton.setAttribute("data-bs-toggle", "modal");
+  saveButton.setAttribute("data-bs-target","#openModal");
+
   openButton.textContent="Open task";
 };
 
 
-const openTask =() =>{
+const opentask=(event) =>{
+  event = window.event;
+  const targetId = event.target.id;
+  const parent= event.target.parentNode.parentNode;
+  const cardBody=parent.querySelector('#cardBody');
+  console.log(cardBody);
+  const opentaskobj ={
+    imageUrl: cardBody.querySelector(".card-img-top").src,
+    taskTitle: cardBody.querySelector(".card-title").textContent,
+    taskType: cardBody.querySelector(".badge").textContent,
+    taskDes: cardBody.querySelector(".card-text").textContent,
+  }
+  console.log(opentaskobj);
+
+  const modalContext= openTaskBody(opentaskobj);
+
+  modalContainer.insertAdjacentHTML("beforeend",modalContext);
 
 };
 
