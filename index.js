@@ -122,7 +122,6 @@ const editCard =(event) =>{
 
   const parent= event.target.parentNode.parentNode.parentNode.parentNode;
   const cardBody=parent.querySelector('#cardBody');
-  console.log(fields);
   var fields=cardBody.querySelectorAll(".editable");
 
   for(let i= 0; i<fields.length; i++){
@@ -137,7 +136,6 @@ const editCard =(event) =>{
   saveButton.setAttribute("data-bs-target","");
 
   saveButton.textContent="save Changes";
-  console.log(saveButton);
 };
 
 
@@ -154,7 +152,6 @@ const esaveChanges=(event) =>{
   const cardBody=parent.querySelector('#cardBody');
   
   var fields=cardBody.querySelectorAll(".editable");
-  console.log(fields);
 
   for(let i= 0; i<fields.length; i++){
     fields[i].setAttribute("contenteditable","false");
@@ -165,8 +162,6 @@ const esaveChanges=(event) =>{
   ctaskTitle = cardBody.querySelector(".card-title").textContent;
   ctaskDes = cardBody.querySelector(".card-text").textContent;
   ctaskType = cardBody.querySelector(".badge").textContent;
-  console.log(ctaskTitle, ctaskType, ctaskDes);
-
 
   GlobalStore.forEach((card)=>{
   if(card.id == targetId){
@@ -203,7 +198,6 @@ const opentask=(event) =>{
     taskType: cardBody.querySelector(".badge").textContent,
     taskDes: cardBody.querySelector(".card-text").textContent,
   }
-  console.log(opentaskobj);
 
   const modalContext= openTaskBody(opentaskobj);
 
