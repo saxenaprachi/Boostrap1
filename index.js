@@ -4,7 +4,7 @@ const modalContainer = document.querySelector(".openModalBody");
 //global store
 let GlobalStore = [];
 
-const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md-6 col-lg-4" id=${id}>
+const newCard=({id,imgUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md-6 col-lg-4" id=${id}>
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-success" id=${id} onClick="editCard.apply(this, arguments)">
@@ -13,7 +13,7 @@ const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md
     <i class="fas fa-trash" id=${id} onclick="deleteCard.apply(this, arguments)"></i></button>
   </div>
   <div class="card-body container" id="cardBody">
-    <img class="card-img-top" alt="photo" src=${imageUrl}/>
+    <img class="card-img-top mb-3" alt="photo" src=${imgUrl}/>
     <h5 class="card-title editable" >${taskTitle}</h5>
     <p class="card-text editable" >${taskDes}</p>
     <span class="badge bg-primary editable" >${taskType}</span>
@@ -26,7 +26,7 @@ const newCard=({id,imageUrl, taskTitle, taskType,taskDes}) =>`<div class="col-md
 </div>`;
 
 const openTaskBody=({ imgUrl, taskTitle, taskType,taskDes}) =>`<div class="mb-3 img__Container">
-<img src="${imgUrl}" alt="picture"/>
+<img src="${imgUrl}" style="width:450px; heigth:450px;" alt="picture"/>
 </div>
 <div class="mb-3 title__Container">
 <h1>${taskTitle}</h1>
@@ -60,7 +60,7 @@ const loadInitialCardData =() =>{
 const saveChanges = () =>{
     const taskdata={
         id: `${Date.now()}`, //unique id genration
-        imageUrl:document.getElementById("imgurl").value,
+        imgUrl:document.getElementById("imgurl").value,
         taskTitle:document.getElementById("tasktitle").value,
         taskType:document.getElementById("tasktype").value,
         taskDes:document.getElementById("taskdes").value,
@@ -117,10 +117,17 @@ const deleteCard =(event) =>{
 const editCard =(event) =>{
 
   event = window.event;
+  tagname= event.target.tagName;
 
   //make fields editable
+  let parent;
 
-  const parent= event.target.parentNode.parentNode.parentNode.parentNode;
+  if (tagname === "BUTTON") {
+    // task__container
+    
+     parent= event.target.parentNode.parentNode.parentNode // col-lg-4
+    
+  }else{ parent= event.target.parentNode.parentNode.parentNode.parentNode};
   const cardBody=parent.querySelector('#cardBody');
   var fields=cardBody.querySelectorAll(".editable");
 
@@ -191,17 +198,19 @@ const opentask=(event) =>{
   const targetId = event.target.id;
   const parent= event.target.parentNode.parentNode;
   const cardBody=parent.querySelector('#cardBody');
-  console.log(cardBody);
+
   const opentaskobj ={
-    imageUrl: cardBody.querySelector(".card-img-top").src,
+    imgUrl: cardBody.querySelector(".card-img-top").getAttribute('src'),
     taskTitle: cardBody.querySelector(".card-title").textContent,
     taskType: cardBody.querySelector(".badge").textContent,
     taskDes: cardBody.querySelector(".card-text").textContent,
   }
 
   const modalContext= openTaskBody(opentaskobj);
+  console.log(opentaskobj);
 
   modalContainer.insertAdjacentHTML("beforeend",modalContext);
+  console.log(modalContainer);
 
 };
 
